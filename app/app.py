@@ -6,7 +6,7 @@ import random
 import string
 
 server_secret = "super-secret"
-base_url = "https://img.gabe.cat"
+base_url = "http://127.0.0.1:5000"
 image_char_length = 8
 
 database_credentials = {
