@@ -12,6 +12,7 @@ services:
       - my-network
     depends_on:
       - flask
+
   flask:
     build:
       context: ./
@@ -20,10 +21,21 @@ services:
     command: gunicorn --bind 0.0.0.0:8000 --workers 4 "app.app:create_app()"
     volumes:
       - ./:/var/www
+    links:
+      - db
     networks:
       my-network:
         aliases:
           - image-host
 
+  db:
+    image: mongo:latest
+    container_name: mongodb
+    networks:
+      - my-network
+    ports:
+      - 27017:27017
+
 networks:
   my-network:
+
