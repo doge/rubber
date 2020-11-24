@@ -31,8 +31,14 @@ services:
   db:
     image: mongo:latest
     container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=toor
+      - MONGO_INITDB_DATABASE=image-host
     networks:
       - my-network
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     ports:
       - 27017:27017
 

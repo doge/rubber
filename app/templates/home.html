@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <script>
+        $(document).ready(function () {
+            $("#notification-button").click(function () {
+                $(this).parent('div').remove();
+            });
+        });
+    </script>
+
+    <section class="hero is-fullheight">
+        <div class="hero-body">
+
+            <div id="login-container" class="container">
+                <div class="columns is-centered">
+                    <div class="column is-5-tablet is-4-desktop is-3-widescreen is-vcentered">
+                        <div class="box">
+                            <h2 class="subtitle">Login</h2>
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="notification is-{{ category }} is-light">
+                                            <button class="delete" id="notification-button"></button>
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            <form method="post">
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        {{ login_form.csrf_token }}
+                                        {{ login_form.username_login(size=20, class='input', placeholder='Username') }}
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                                        {{ login_form.password_login(size=20, class='input', placeholder='Password') }}
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="control">
+                                        <p class="help is-link"><a href="/register">Don't have an account?</a></p>
+                                    </div>
+                                </div>
+
+                                <div class="control">
+                                    {{ login_form.button_login(size=20, class='button is-fullwidth is-link') }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock content %}

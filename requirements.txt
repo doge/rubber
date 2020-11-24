@@ -8,3 +8,4 @@ soupsieve==2.0.1
 Werkzeug==1.0.1
 gunicorn
 pymongo
+wtforms

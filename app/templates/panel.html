@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <script>
+        function open_tab(evt, tabName) {
+            if (!document.getElementsByClassName(tabName)[0]) {
+                return;
+            }
+
+            var content_tabs = document.getElementsByClassName('content-tab');
+            var buttons = document.querySelectorAll('li > a');
+
+            for (var i = 0; i < content_tabs.length; i++) {
+                content_tabs[i].style.display = 'none';
+            }
+
+            for (var i = 0; i < buttons.length; i++) {
+                if (buttons[i].className == 'is-active') {
+                    buttons[i].className = '';
+                }
+            }
+
+            document.getElementsByClassName(tabName)[0].style.display = 'block';
+            evt.currentTarget.className = 'is-active';
+        }
+
+        $(document).ready(function () {
+            $("#notification-button").click(function () {
+                $(this).parent('div').remove();
+            });
+        });
+
+    </script>
+
+
+    <div class='container'>
+        <div class='columns is-centered' style="padding-top:5vh">
+            <div class='column is-one-quarter'>
+                <aside class='menu'>
+                    <ul class='menu-list'>
+                        <p class='menu-label'>Menu</p>
+                        <li><a onclick='open_tab(event, "home")' class='is-active'>Home</a></li>
+                        <li><a onclick='open_tab(event, "account")'>Account</a></li>
+                        <li><a onclick='open_tab(event, "images")'>Images</a></li>
+                        <li><a href="/config">ShareX Config</a></li>
+                        <li><a class='has-text-danger' href='/logout'>Logout</a></li>
+
+                        {% if user['role'] == 'admin' %}
+                            <p class='menu-label'>Admin</p>
+                            <li><a onclick='open_tab(event, "users")'>Users</a></li>
+                            <li><a onclick='open_tab(event, "invites")'>Invitations</a></li>
+                        {% endif %}
+
+                    </ul>
+                </aside>
+            </div>
+
+            <div class='column is-three-quarters content-tab home'>
+                <div class='box'>
+                    <div class="field">
+
+                        <h1 class="title">Welcome back, {{ user['username'].capitalize() }}.</h1>
+                        <hr>
+
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="notification is-{{ category }} is-light">
+                                        <button class="delete" id="notification-button"></button>
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <p>Role: {{ user['role'].capitalize() }}.</p>
+                        <p>Total uploads: <strong>{{ len(uploads) }}</strong>.</p>
+                        <p>Token: <strong>{{ user['token'] }}</strong></p>
+                    </div>
+
+                    <div class="field">
+                        <form action="/token" method="post">
+                            <input hidden name="user" value="{{ user['username'] }}"/>
+                            <button type="submit" class="button is-link">
+                                Generate new token
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+             <div class='column is-three-quarters content-tab account' style="display:none;">
+                <div class='box'>
+                    <div class="field">
+
+                        <h1 class="title">Account</h1>
+                        <hr>
+
+                    </div>
+
+                    <div class="field">
+                        <form action="/reset" method="post">
+                             <div class="field">
+                                <div class="control">
+                                    {{ reset_form.csrf_token }}
+                                    {{ reset_form.current_password(size=20, class='input', placeholder='Current Password') }}
+                                </div>
+                            </div>
+                             <div class="field">
+                                <div class="control">
+                                    {{ reset_form.new_password(size=20, class='input', placeholder='New Password') }}
+                                </div>
+                            </div>
+                             <div class="field">
+                                <div class="control">
+                                    {{ reset_form.new_password_confirm(size=20, class='input', placeholder='Confirm Password') }}
+                                </div>
+                            </div>
+
+                            <input hidden name="user" value="{{ user['username'] }}"/>
+                            {{ reset_form.button_submit(size=20, class='button is-link', value='Reset Password') }}
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class='column content-tab images' style='display: none'>
+                <div class='box'>
+                    <h1 class='title'>Images</h1>
+                    <hr>
+                    <table class='table is-bordered is-narrow is-hoverable is-fullwidth'>
+                        <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        {% for item in uploads %}
+                            <tbody>
+                            <tr>
+                                <form action="/delete" method="post">
+                                    <td><a href="{{ base_url }}/{{ item['name'] }}">{{ item['name'] }}</a></td>
+                                    <td>{{ item['date'] }}</td>
+                                    <td>
+
+                                        <input hidden name="to-remove" value="{{ item['name'] }}"/>
+                                        <button type="submit" class="button is-danger">
+                                                 <span class="icon is-small">
+                                                     <i class="fas fa-trash"></i>
+                                                </span>
+                                        </button>
+                                    </td>
+                                </form>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+
+                    </table>
+                </div>
+            </div>
+            <div class='column content-tab invites' style='display: none'>
+                <div class='box'>
+                    <h1 class='title'>Invitations</h1>
+                    <hr>
+                    <table class='table is-bordered is-narrow is-hoverable is-fullwidth'>
+                        <thead>
+                        <tr>
+                            <th>Invite</th>
+                            <th>Author</th>
+                            <th>Used By</th>
+                        </tr>
+                        </thead>
+
+                        {% for invite in invites %}
+                            <tbody>
+                            <tr>
+                                <form action="/delete" method="post">
+                                    <td>{{ invite['code'] }}</td>
+                                    <td>{{ invite['author'] }}</td>
+                                    <td>{{ invite['used-by'] }}</td>
+                                    </td>
+                                </form>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+
+                    <div class="field">
+                        <div class="control">
+                            <form action="/generate" method="post">
+                                <input hidden name="author" value="{{ user['username'] }}"/>
+                                <button type="submit" class="button is-link">Generate Invite</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class='column content-tab users' style='display: none'>
+                <div class='box'>
+                    <h1 class='title'>Users</h1>
+                    <hr>
+                    <table class='table is-bordered is-narrow is-hoverable is-fullwidth'>
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Banned</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        {% for user in users %}
+                            <tbody>
+                            <tr>
+                                <form action="/ban" method="post">
+                                    <td>{{ user['username'] }}</td>
+                                    <td>{{ user['email'] }}</td>
+                                    <td>{{ user['role'] }}</td>
+                                    <td>{{ user['banned'] }}</td>
+
+                                    <td>
+
+                                        <input hidden name="to-ban" value="{{ user['username'] }}"/>
+                                        <button type="submit" class="button is-danger">
+                                                 <span class="icon is-small">
+                                                     <i class="fas fa-hammer"></i>
+                                                </span>
+                                        </button>
+                                    </td>
+
+                                </form>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,16 +1,14 @@
 <html>
+<head>
+    <title>{{ file['name'] }}</title>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta id="discord" name="twitter:image" content="{{ base_url + "/files/" + file['name'] + ".png" }}"/>
+    <meta property="og:title" id="embed-title" content={{ file['name'] }}/>
+    <meta property="og:description" id="embed-desc" content="uploaded on {{ file['date'] }}"/>
+    <meta name="theme-color" content="#d49559">
+</head>
 
-    <head>
-        <title>{{ file['name'] }}</title>
-        <meta name="twitter:card" content="summary_large_image">
-        <meta id="discord" name="twitter:image" content="{{ base_url + "/files/" + file['name'] + ".png" }}"/>
-        <meta property="og:title" id="embed-title" content={{ file['name'] }} />
-        <meta property="og:description" id="embed-desc" content="uploaded on {{ file['date'] }}"  />
-        <meta name="theme-color" content="#d49559">
-    </head>
-
-    <body>
-        <img src="{{ base_url + "/files/" + file['name'] + ".png" }}" />
-    </body>
-
+<body>
+<img src="{{ base_url + "/files/" + file['author'] + "/" + file['name'] + ".png" }}"/>
+</body>
 </html>
