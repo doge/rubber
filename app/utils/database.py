@@ -4,11 +4,9 @@ import datetime
 
 class Database:
     def __init__(self, credentials, collection):
-        # use this on production server
-        self.client = MongoClient('mongodb://%s:%s@%s:%s' % (credentials['user'], credentials['password'],
-                                                             credentials['ip'], credentials['port']))
-        # use this on local server
-        # self.client = MongoClient(credentials['ip'], credentials['port'])
+        #self.client = MongoClient('mongodb://%s:%s@%s:%s' % (credentials['user'], credentials['password'],
+        #                                                     credentials['ip'], credentials['port']))
+        self.client = MongoClient(credentials['ip'], credentials['port'])
         self.db = self.client[credentials['db_name']]
         self.collection = self.db[collection]
 

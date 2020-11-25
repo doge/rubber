@@ -13,12 +13,11 @@ db.createCollection('users', { capped: false });
 
 db.users.insert([
   { 
-	'username': 'admin',
-	'email': 'admin@example.com',
-	'role': 'admin',
-	// 'admin'
-	'password': '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
+	'username': 'gabe',
+	'email': 'me@gabe.cat',
+    'role': 'admin',
+    'password': '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
 	'banned': false,
-	'token': 'regenerate-me'
+    'token': 'dxBAQfkSCd8FT3eJGoffuXF45fXcBVPB'
   }
 ]);

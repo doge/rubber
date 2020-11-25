@@ -1,9 +1,0 @@
-﻿{
-  "DestinationType": "ImageUploader",
-  "RequestURL": "http://127.0.0.1:5000/upload",
-  "FileFormName": "image",
-  "Arguments": {
-    "secret": "super-secret"
-  },
-  "URL": "http://127.0.0.1:5000/$json:filename$"
-}

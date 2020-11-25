@@ -34,7 +34,6 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=toor
-      - MONGO_INITDB_DATABASE=image-host
     networks:
       - my-network
     volumes:
